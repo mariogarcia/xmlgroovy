@@ -1,0 +1,17 @@
+
+apply plugin:'groovy'      
+
+repositories{
+	mavenCentral()
+}
+
+dependencies {                                                                                                                          
+
+	groovy "org.codehaus.groovy:groovy-all:2.0.5"
+	compile "org.codehaus.groovy:groovy-all:2.0.5"
+
+	/* For testing Spock...what else? */
+	compile "org.spockframework:spock-core:0.7-groovy-2.0"
+	compile "com.googlecode.gbench:gbench:0.3.1-groovy-2.0"
+}
+

@@ -1,0 +1,22 @@
+<response version-api="2.0">
+	<value>
+		<books>
+			<book id="1">
+				<title>Don Xijote</title>
+				<author id="1">Manuel De Cervantes</author>
+			</book>
+			<book id="2">
+				<title>Catcher in the Rye</title>
+				<author id="2">JD Salinger</author>
+			</book>
+			<book id="3">
+				<title>Alice in Wonderland</title>
+				<author id="1">Lewis Carroll</author>
+			</book>
+			<book id="4">
+				<title>Don Xijote</title>
+				<author id="1">Manuel De Cervantes</author>
+			</book>
+		</books>
+	</value>
+</response>
