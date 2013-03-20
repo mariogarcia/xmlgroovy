@@ -1,5 +1,6 @@
 package github.groovy.xml.xmlparser
 
+import groovyx.gbench.Benchmark
 import groovy.xml.QName
 import spock.lang.Specification
 
@@ -22,6 +23,7 @@ class XmlParserManipulatingNodesSpec extends Specification{
 		</response>
 	"""
 
+	@Benchmark
 	def "Adding a new tag to a node"(){
 		setup: "Building an instance of XmlParser"
 			def parser = new XmlParser()
@@ -39,6 +41,7 @@ class XmlParserManipulatingNodesSpec extends Specification{
 			response.numberOfResults.text() == "1"
 	}
 
+	@Benchmark
 	def "Adding a new tag to a node with the node instance"(){
 		setup: "Building an instance of XmlParser"
 			def parser = new XmlParser()
@@ -54,6 +57,7 @@ class XmlParserManipulatingNodesSpec extends Specification{
 			response.numberOfResults.text() == "1"
 	}
 
+	@Benchmark
 	def "Replacing a node"(){
 		setup: "Building the parser and parsing the xml"
 			def response = new XmlParser().parseText(xml)
@@ -76,6 +80,7 @@ class XmlParserManipulatingNodesSpec extends Specification{
 			newNode.author.@id.first() == "3"
 	}
 
+	@Benchmark
 	def "Adding a new attribute to a node"(){
 		setup: "Building an instance of XmlParser"
 			def parser = new XmlParser()
