@@ -54,17 +54,37 @@ class XmlSlurperManipulatingNodesSpec extends Specification{
 
 	@Benchmark
 	def "Replacing a node"(){
-		when: "Running this spec"
-		then: "An exception will be throw"
-			thrown(Exception)
-
+		setup: "Parsing the document"
+			def response = new XmlSlurper().parseText(xml)
+		when: "Replacing the book 'Don Xijote' with 'To Kill a Mockingbird'"
+		 /* Use the same syntax as groovy.xml.MarkupBuilder */
+			response.value.books.book[0].replaceNode{
+				book(id:"3"){
+					title("To Kill a Mockingbird")
+					author(id:"3","Harper Lee")
+				}
+			}
+		and: "Asserting the lazyness"
+			assert response.value.books.book[0].title.text() == "Don Xijote"
+		and: "Rebuild the document"
+	 	 /* That mkp is a special namespace used to escape away from the normal building mode 
+			of the builder and get access to helper markup methods 
+			'yield', 'pi', 'comment', 'out', 'namespaces', 'xmlDeclaration' and 
+			'yieldUnescaped' */
+			def result = new StreamingMarkupBuilder().bind{mkp.yield response}.toString()
+			def changedResponse = new XmlSlurper().parseText(result)
+		then: "Looking for the new node"
+			assert changedResponse.value.books.book[0].title.text() == "To Kill a Mockingbird"
 	}
 
 	@Benchmark
 	def "Adding a new attribute to a node"(){
-		when: "Running this spec"
-		then: "An exception will be throw"
-			thrown(Exception)
+		setup: "Parsing the document"
+			def response = new XmlSlurper().parseText(xml)
+		when: "adding a new attribute to response"
+			response.@numberOfResults = "2"
+		then: "In attributes the node is accesible right away"
+			response.@numberOfResults == "2"
 	}
 
 }
