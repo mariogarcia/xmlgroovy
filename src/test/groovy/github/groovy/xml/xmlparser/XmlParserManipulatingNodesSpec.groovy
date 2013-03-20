@@ -57,7 +57,7 @@ class XmlParserManipulatingNodesSpec extends Specification{
 	def "Replacing a node"(){
 		setup: "Building the parser and parsing the xml"
 			def response = new XmlParser().parseText(xml)
-		when: "Replacing the book 'Don Xijote' to 'To Kill a Mockingbird'"
+		when: "Replacing the book 'Don Xijote' with 'To Kill a Mockingbird'"
 		 /* Use the same syntax as groovy.xml.MarkupBuilder */
 			response.value.books.book[0].replaceNode{
 				book(id:"3"){
@@ -85,6 +85,5 @@ class XmlParserManipulatingNodesSpec extends Specification{
 			response.@numberOfResults = "1"
 		then: "We should be able to see the new attribute"
 			response.@numberOfResults == "1"
-
 	}
 }

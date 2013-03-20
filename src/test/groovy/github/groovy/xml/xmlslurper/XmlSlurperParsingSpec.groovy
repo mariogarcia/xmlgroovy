@@ -46,4 +46,7 @@ class XmlSlurperParsingSpec extends Specification{
 		then: "Checking the xml's content"
 			response.value.books.book[0].title.text() == "Don Xijote"
 	}
+
+
+	
 }
