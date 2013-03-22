@@ -8,6 +8,8 @@ import javax.xml.stream.*
 import javax.xml.namespace.QName
 import javax.xml.transform.stream.*
 
+import static javax.xml.stream.XMLStreamConstants.*
+
 class StaxSpec extends Specification{
 
 	def xml = """
@@ -29,17 +31,27 @@ class StaxSpec extends Specification{
 			def reader = XMLInputFactory.newFactory().createXMLEventReader(
 				new StringReader(xml)
 			)	
-		when: "Traversing the document"
-			def value
+		when: "Creating the query"
+			def authors = {readerDelegate,event-> 
+				def map = [:]
+				if (event.eventType == START_ELEMENT && event.name.localPart == "author"){
+					map.id = event.getAttributeByName(new QName("id")).value
+					map.name = readerDelegate.next()?.data
+				}
+				map?.id ? map: null
+			}.curry(reader).memoize()
+		and: "Looking for the first author in the xml document"
+			def author = reader.findResult(authors)
+		and: "That would be the java execution" /*
 			while(reader.hasNext()){
 				def xmlEvent = reader.nextEvent()
-				if (xmlEvent.eventType == XMLStreamConstants.START_ELEMENT && xmlEvent.name.localPart == "author"){
-					value = xmlEvent.getAttributeByName(new QName("id")).value
+				if (xmlEvent.eventType == START_ELEMENT && xmlEvent.name.localPart == "author"){
+					id = xmlEvent.getAttributeByName(new QName("id")).value
+					author = reader.next()?.data
 				}	
-			}
+			} */
 		then: "The result should be Manuel De Cervantes"
-			value == "1"
+			author.name == "Manuel De Cervantes"
+			author.id == "1"
 	}
-
-
 }
