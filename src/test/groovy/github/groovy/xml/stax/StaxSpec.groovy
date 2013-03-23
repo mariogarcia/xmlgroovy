@@ -28,17 +28,13 @@ class StaxSpec extends Specification{
 	@Benchmark
 	def "Parsing a document with Stax"(){
 		setup: "Parsing the document"
-			def reader = XMLInputFactory.newFactory().createXMLEventReader(
-				new StringReader(xml)
-			)	
+			def reader = XMLInputFactory.newFactory().createXMLEventReader(new StringReader(xml))	
 		when: "Creating the query"
 			def authors = {readerDelegate,event-> 
-				def map = [:]
-				if (event.eventType == START_ELEMENT && event.name.localPart == "author"){
-					map.id = event.getAttributeByName(new QName("id")).value
-					map.name = readerDelegate.next()?.data
-				}
-				map?.id ? map: null
+				event.eventType == START_ELEMENT && event.name.localPart == "author" ? [
+					id : event.getAttributeByName(new QName("id")).value,
+					name : readerDelegate.next()?.data
+				] : null
 			}.curry(reader).memoize()
 		and: "Looking for the first author in the xml document"
 			def author = reader.findResult(authors)
