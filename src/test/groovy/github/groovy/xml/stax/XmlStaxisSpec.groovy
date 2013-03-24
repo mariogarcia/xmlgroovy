@@ -32,6 +32,7 @@ class XmlStaxisSpec extends Specification{
 			author.text == "JD Salinger"
 	}
 
+	@Benchmark
 	def "Searching first occurrence by author and id greater than 2"(){
 		setup: "Parsing document"
 			def station = new XmlStaxis().parse(xmlFile)
@@ -45,7 +46,8 @@ class XmlStaxisSpec extends Specification{
 			author.text == "Lewis Carroll"
 	}
 
-	def "Mixin different attribute constraints"(){
+	@Benchmark
+	def "Searching first ocrrence mixin different attribute constraints"(){
 		setup: "Parsing document"
 			def station = new XmlStaxis().parse(xmlFile)
 		when: "Looking for the tag"
@@ -58,4 +60,26 @@ class XmlStaxisSpec extends Specification{
 			book.available == "5"
 	}
 
+	@Benchmark
+	def "Searching all authors within the document"(){
+		setup: "parsing document"
+			def station = new XmlStaxis().parse(xmlFile)
+		when: "executing the criteria"
+			def authorList = station.findAllByTag("author")
+		then: "Checking the result"
+			authorList.size() == 4
+	}
+
+	@Benchmark
+	def "Searching all books with id less than 4 with more than 13 copies"(){
+		setup: "parsing document"
+			def station = new XmlStaxis().parse(xmlFile)
+		when: "executing the criteria"
+			def bookList = station.findAllByTag("book"){
+				lt("id","4")
+				gt("available","13")
+			}
+		then: "Checking the results"
+			bookList.size() == 2
+	}
 }

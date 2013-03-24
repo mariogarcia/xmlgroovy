@@ -10,12 +10,17 @@ class AttributeExpressionBuilder extends AttributeAndExpression{
 		attrExpressions << new AttributeGreaterThanExpression(property,value)
 	}
 
+	def lt(String property,Object value){
+		attrExpressions << new AttributeLessThanExpression(property,value)
+	}
+
 	def evalTrue(){
-		new AttributeEvalTrueExpression()	
+		attrExpressions << new AttributeEvalTrueExpression()	
 	}
 
 	def build(Closure cl){
 		this.with(cl)
+	 /* Returning this instance */
 		this
 	}
 }

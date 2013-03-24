@@ -55,11 +55,46 @@ class XmlStaxis {
 		 * @return an map with the tag attributes/values and the value of the tag if it was a text tag
 		**/
 		def findByTag(String tagName,Closure closure){
+			def query = createQuery(tagName,closure)
+			reader.findResult(query)
+		}
+
+		/**
+		 * Looks for all items matching the tag name passed as parameter
+		 *
+		 * @param tagName the name of the elements we are looking for
+		 * @return a list of maps
+		**/
+		def findAllByTag(String tagName){
+			findAllByTag(tagName,null)	
+		}
+
+		/**
+		 * Looks for all items matching the tag name passed as parameter. It also
+		 * could reveive a closure with some constraints related to the element's
+		 * attributes
+		 *
+		 * @param tagName the name of the elements we are looking for
+		 * @param closure the closure with the attributes' constraints
+		 * @return a list of maps
+		**/
+		def findAllByTag(String tagName,Closure closure){
+			def query = createQuery(tagName,closure)
+			reader.collect(query).findAll{it}
+		}
+
+		/**
+		 * This method builds the expression used to find the items inside the xml
+		 * 
+		 * @param tagName the tagName
+		 * @param closure
+		**/
+		def createQuery(String tagName,Closure closure){
 			def tagExpression = new TagExpression(tagName)
 			def attributeExpression = new AttributeExpressionBuilder().build(closure ?: { evalTrue() } )
 			def query = findByTagClosure.curry(reader).curry(tagExpression).curry(attributeExpression)
-
-			reader.findResult(query)
+		 /* returning the query */
+			query
 		}
 
 		/**
