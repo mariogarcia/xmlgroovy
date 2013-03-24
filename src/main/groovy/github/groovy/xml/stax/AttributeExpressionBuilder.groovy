@@ -6,6 +6,10 @@ class AttributeExpressionBuilder extends AttributeAndExpression{
 		attrExpressions << new AttributeEqExpression(property,value)	
 	}
 
+	def gt(String property,Object value){
+		attrExpressions << new AttributeGreaterThanExpression(property,value)
+	}
+
 	def evalTrue(){
 		new AttributeEvalTrueExpression()	
 	}

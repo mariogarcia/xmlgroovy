@@ -5,24 +5,55 @@ import javax.xml.transform.stream.*
 import javax.xml.stream.*
 import javax.xml.stream.XMLStreamConstants
 
+/**
+ * This class acts as a read-only xml parser based on Stax
+ *
+ * @author mario
+**/
 class XmlStaxis {
 
 	def xmlInputFactory
 
+	/**
+	 * This class holds the query methods you can use to query your xml
+	**/
 	class Station {
-		@Delegate
-		XMLEventReader reader
 
+	  /**
+		* All queries, constraints...etc is based on the XMLEventReader object 
+		**/
+		@Delegate XMLEventReader reader
+
+		/**
+		 * A single algorithm that evaluates tags and its attributes depending on the expressions
+		 * provided to the closure. The closure gets the tag value and all its attributes and build
+		 * a map with all of them. Now it's only helpful with simple tags.
+		**/
 		def findByTagClosure = {readerDelegate,tagExpression,attrExpression = null,event-> 
 			tagExpression.evaluate(event) && attrExpression.evaluate(event) ? [
 				text : readerDelegate.next()?.data
 			] << event.attributes.collectEntries{at-> [(at.name.toString()):at.value]} : null
 		}
 
+		/**
+	     * looks for the first xmlevent instance that contents a tag with the name passed
+		 * as parameter
+		 * 
+		 * @param tagname
+		 * @return an map with the tag attributes/values and the value of the tag if it was a text tag
+		**/
 		def findByTag(String tagName){
 			findByTag(tagName,null)
 		}
 
+		/**
+	     * looks for the first xmlevent instance that contents a tag with the name passed
+		 * as parameter
+		 * 
+		 * @param tagname
+		 * @param closure A closure with constraints about the tag's attributes
+		 * @return an map with the tag attributes/values and the value of the tag if it was a text tag
+		**/
 		def findByTag(String tagName,Closure closure){
 			def tagExpression = new TagExpression(tagName)
 			def attributeExpression = new AttributeExpressionBuilder().build(closure ?: { evalTrue() } )
@@ -31,19 +62,39 @@ class XmlStaxis {
 			reader.findResult(query)
 		}
 
+		/**
+		 * The constructor receives an instance of XMLStreamReader
+		 *
+		 * @param re and instance of XMLEventReader 
+		**/
 		def Station(re){
 			reader = re
 		}
 	}
 
+	/**
+	 * Creating a read-only Stax factory
+	**/
 	def XmlStaxis(){
 		xmlInputFactory = XMLInputFactory.newFactory()
 	}
 
+	/**
+	 * Parsing an xml from a given xml
+	 * 
+	 * @param xml a String with the xml
+	 * @return an instance of XmlStaxis.Station
+	**/
 	def parseText(String xml){
 		new Station(xmlInputFactory.createXMLEventReader(new StringReader(xml)))
 	}
 
+	/**
+	 * Parsing an xml from a given xml
+	 * 
+	 * @param xml a File with the xml
+	 * @return an instance of XmlStaxis.Station
+	**/
 	def parse(File xmlFile){
 		new Station(xmlInputFactory.createXMLEventReader(new FileReader(xmlFile)))
 	}

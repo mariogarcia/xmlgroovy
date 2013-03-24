@@ -6,12 +6,12 @@ import javax.xml.namespace.QName
 import javax.xml.stream.events.XMLEvent
 
 @InheritConstructors
-class AttributeEqExpression extends SimpleAttributeExpression{
-
+class AttributeGreaterThanExpression extends SimpleAttributeExpression{
+	
 	boolean evaluate(XMLEvent event){
 		def attribute = event?.getAttributeByName(new QName(attributeName))
-		def equals = attribute?.value == attributeValue
+		def isGreaterThan = attribute?.value > attributeValue
 
-		equals
+		isGreaterThan
 	}
 }

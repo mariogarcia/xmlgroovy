@@ -1,21 +1,21 @@
 <response version-api="2.0">
 	<value>
 		<books>
-			<book id="1">
+				<book id="1" available="20">
 				<title>Don Xijote</title>
 				<author id="1">Manuel De Cervantes</author>
 			</book>
-			<book id="2">
+			<book id="2" available="14">
 				<title>Catcher in the Rye</title>
 				<author id="2">JD Salinger</author>
 			</book>
-			<book id="3">
+			<book id="3" available="13">
 				<title>Alice in Wonderland</title>
-				<author id="1">Lewis Carroll</author>
+				<author id="3">Lewis Carroll</author>
 			</book>
-			<book id="4">
+			<book id="4" available="5">
 				<title>Don Xijote</title>
-				<author id="1">Manuel De Cervantes</author>
+				<author id="4">Manuel De Cervantes</author>
 			</book>
 		</books>
 	</value>
