@@ -1,12 +1,14 @@
 package github.groovy.xml.jaxb
 
 import groovy.xml.XmlUtil
+import groovyx.gbench.Benchmark
 import spock.lang.Specification
 import github.groovy.xml.util.ResourcesUtil
 
 @Mixin(JaxbUtils)
 class JaxbSpec extends Specification{
 
+	@Benchmark
 	def "Unmarshalling the first book"(){
 		setup: "Parsing the document"
 			def response = new XmlSlurper().parse(xmlFile)
