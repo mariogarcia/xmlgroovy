@@ -29,11 +29,29 @@ class XmlStaxis {
 		 * provided to the closure. The closure gets the tag value and all its attributes and build
 		 * a map with all of them. Now it's only helpful with simple tags.
 		**/
-		def findByTagClosure = {readerDelegate,tagExpression,attrExpression = null,event-> 
-			tagExpression.evaluate(event) && attrExpression.evaluate(event) ? [
+		def findByTagClosure = {readerDelegate,tagExpression,event-> 
+			tagExpression.evaluate(event) ? [
 				text : readerDelegate.next()?.data
 			] << event.attributes.collectEntries{at-> [(at.name.toString()):at.value]} : null
 		}
+
+		/**
+		* The expression should have the tag and the closure with the criteria
+		* If a node matches the criteria all its inner estructure should be 
+		* returned using nested maps. 
+		*
+	    * def bookList = station.findAllByTag("book"){
+		*		author{
+		*			lt("id",1)
+		*			gt("available",2)
+	    *		}
+		*	}
+		*
+		**/
+		//def findByTagClosure = {readerDelegate,expression,event->
+		 /* If the event matches the expression we collect its nested values in nested maps */
+			//expression.evaluate(event) ? collector.collectTree(readerDelegate) : null
+		//}
 
 		/**
 	     * looks for the first xmlevent instance that contents a tag with the name passed
@@ -90,9 +108,8 @@ class XmlStaxis {
 		 * @param closure
 		**/
 		def createQuery(String tagName,Closure closure){
-			def tagExpression = new TagExpression(tagName)
-			def attributeExpression = new AttributeExpressionBuilder().build(closure ?: { evalTrue() } )
-			def query = findByTagClosure.curry(reader).curry(tagExpression).curry(attributeExpression)
+			def tagExpression = new TagExpression(tagName,closure)
+			def query = findByTagClosure.curry(reader).curry(tagExpression)
 		 /* returning the query */
 			query
 		}
