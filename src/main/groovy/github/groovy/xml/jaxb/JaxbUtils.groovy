@@ -6,7 +6,7 @@ import github.groovy.xml.util.ResourcesUtil
 /**
  * This class helps us to handle marshalling and unmarshalling of JAXB objects
 **/
-class JaxbUtils extends ResourcesUtil{
+class JaxbUtils {
 
 	def object2MarshalType
 	def source2Unmarshall 

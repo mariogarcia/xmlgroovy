@@ -6,6 +6,7 @@ import spock.lang.Specification
 import github.groovy.xml.util.ResourcesUtil
 
 @Mixin(JaxbUtils)
+@Mixin(ResourcesUtil)
 class JaxbSpec extends Specification{
 
 	@Benchmark
