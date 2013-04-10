@@ -83,18 +83,4 @@ class XmlStaxisSpec extends Specification{
 		then: "Checking the results"
 			bookList.size() == 2
 	}
-
-	@Benchmark
-	def "Searching all books by nested tags and the latter's attributes"(){
-		setup: "parsing document"
-			def station = new XmlStaxis().parse(xmlFile)
-		when: "Executing the criteria"
-			def bookList = station.findAllByTag("book"){
-				author{
-					lt("id","1")
-				}
-			}
-		then: "Checking the results"
-			bookList.size() == 1
-	}
 }
