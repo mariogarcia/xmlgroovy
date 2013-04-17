@@ -25,6 +25,6 @@ class XmlUtilSpec extends Specification{
 			def nodeToSerialize = response.'**'.find{it.name() == 'author'}
 			def nodeAsText = XmlUtil.serialize(nodeToSerialize).readLines().find{it.contains("author")}
 		then: "We should be seeing the xml fragment"
-			nodeAsText == '<author id="1">Manuel De Cervantes</author>'
+			nodeAsText.contains('<author id="1">Manuel De Cervantes</author>')
 	}
 }
